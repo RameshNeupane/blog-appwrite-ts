@@ -1,10 +1,10 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { getAuthStatus, getUserData, logout } from "@store/slice/authSlice";
 
-const Avatar = () => {
+const Avatar: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const userData = useAppSelector(getUserData);
@@ -56,7 +56,7 @@ const Avatar = () => {
                             <button
                                 disabled={authStatus === "loading"}
                                 onClick={handleLogout}
-                                className={`w-full p-2 border border-purple-500 rounded-md text-b2 disabled:cursor-not-allowed ${
+                                className={`w-full p-2 border border-purple-500 rounded-md text-b2 transition-colors duration-200 ease-in disabled:cursor-not-allowed ${
                                     active && "bg-purple-500"
                                 }`}
                             >

@@ -1,10 +1,10 @@
 import service from "@appwrite/service";
 import { useForm } from "react-hook-form";
-import { IPost } from "src/types/post.types";
+import { PostFromDB } from "src/types/posts.types";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@store/slice/authSlice";
-import React, { useCallback, useEffect } from "react";
-import { IInputData } from "src/types/inputData.types";
+import React, { useCallback, useEffect, useState } from "react";
+import { IPostFormData } from "src/types/posts.types";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Button, Input, RealTimeEditor, Select } from "@components/index";
 import {
@@ -14,12 +14,12 @@ import {
 } from "@store/slice/postsSlice";
 
 interface PostFormProps {
-    post?: IPost;
+    post?: PostFromDB;
 }
 
 const PostForm: React.FC<PostFormProps> = ({ post }) => {
     const { register, handleSubmit, control, watch, setValue, getValues } =
-        useForm<IInputData>({
+        useForm<IPostFormData>({
             defaultValues: {
                 title: post?.title || "",
                 slug: post?.$id || "",
@@ -32,8 +32,11 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
     const dispatch = useAppDispatch();
     const userData = useAppSelector(getUserData);
     const postsStatus = useAppSelector(getPostsStatus);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const submitPost = async (data: IInputData) => {
+    const submitPost = async (data: IPostFormData) => {
+        console.log(data);
+        setIsLoading(true);
         if (post) {
             await dispatch(updatePost({ post, data }));
             if (postsStatus === "succeeded") {
@@ -43,10 +46,11 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
             await dispatch(
                 addNewPost({ data, userId: userData?.$id as string })
             );
-            if (postsStatus === "succeeded") {
+            if (!isLoading) {
                 navigate(`/post/${data.slug}`);
             }
         }
+        setIsLoading(false);
     };
 
     // transform slug
@@ -85,7 +89,7 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
     } else {
         btnText = "Publish";
     }
-    if (postsStatus === "loading") {
+    if (isLoading) {
         btnText += "ing...";
     }
 
@@ -120,7 +124,7 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
             <div className="w-1/3 px-2">
                 <Input
                     label="Featured Image :"
-                    type="image"
+                    type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post })}
@@ -147,7 +151,9 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
                 <Button
                     type="submit"
                     bgColor={post ? "bg-green-500" : undefined}
-                    className="w-full"
+                    className={`w-full ${
+                        post ? "hover:bg-green-600" : "hover:bg-blue-700"
+                    }`}
                 >
                     {btnText}
                 </Button>

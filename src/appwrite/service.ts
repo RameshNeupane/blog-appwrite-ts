@@ -1,13 +1,6 @@
-import config from "../config/config";
+import config from "@config/config";
+import { IPostToDB } from "src/types/posts.types";
 import { Client, Databases, ID, Query, Storage } from "appwrite";
-
-interface IData {
-    title: string;
-    content: string;
-    featuredImage: string;
-    status: string;
-    userId: string;
-}
 
 class Service {
     client = new Client();
@@ -31,7 +24,7 @@ class Service {
     // create post
     async createPost(
         slug: string,
-        { title, content, featuredImage, status, userId }: IData
+        { title, content, featuredImage, status, userId }: IPostToDB
     ) {
         try {
             return await this.databases.createDocument(
@@ -49,14 +42,14 @@ class Service {
     // update post
     async updatePost(
         slug: string,
-        { title, content, featuredImage, status }: IData
+        { title, content, featuredImage, status, userId }: IPostToDB
     ) {
         try {
             return await this.databases.updateDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug,
-                { title, content, featuredImage, status }
+                { title, content, featuredImage, status, userId }
             );
         } catch (error) {
             console.log("Appwrite service :: updatePost :: error", error);

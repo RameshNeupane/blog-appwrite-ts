@@ -1,16 +1,6 @@
 import config from "@config/config";
-import { Account, Avatars, Client, ID } from "appwrite";
-
-interface createAccountParams {
-    email: string;
-    password: string;
-    name: string;
-}
-
-interface loginParams {
-    email: string;
-    password: string;
-}
+import { ILoginData, ISignupData } from "src/types/auth.types";
+import { Account, AppwriteException, Avatars, Client, ID } from "appwrite";
 
 class AuthService {
     client = new Client();
@@ -27,7 +17,7 @@ class AuthService {
     }
 
     // signup
-    async createAccount({ email, password, name }: createAccountParams) {
+    async createAccount({ email, password, name }: ISignupData) {
         try {
             const userAccount = await this.account.create(
                 ID.unique(),
@@ -47,12 +37,12 @@ class AuthService {
     }
 
     // login/signin
-    async login({ email, password }: loginParams) {
+    async login({ email, password }: ILoginData) {
         try {
             return await this.account.createEmailSession(email, password);
         } catch (error) {
             console.log("Appwrite service :: login :: error", error);
-            throw error;
+            throw error as AppwriteException;
         }
     }
 

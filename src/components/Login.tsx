@@ -1,26 +1,25 @@
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { ILoginData } from "src/types/auth.types";
+import { Button, Input, Logo } from "@components/index";
+import { useAppDispatch, useAppSelector } from "@store/store";
 import {
     login,
     getAuthStatus,
     getLoginError,
     resetLoginError,
 } from "@store/slice/authSlice";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { Button, Input, Logo } from "@components/index";
-import { useDispatch, useSelector } from "react-redux";
-import { ILoginData } from "src/types/auth.types";
 
-const Login = () => {
-    const dispatch = useDispatch();
+const Login: React.FC = () => {
+    const dispatch = useAppDispatch();
     const { register, handleSubmit } = useForm<ILoginData>();
 
-    const loginError = useSelector(getLoginError);
-    const authStatus = useSelector(getAuthStatus);
+    const loginError = useAppSelector(getLoginError);
+    const authStatus = useAppSelector(getAuthStatus);
 
     const handleLogin = async (data: ILoginData) => {
-        console.log("login", data);
-        // await dispatch(resetLoginError());
-        // await dispatch(login(data));
+        dispatch(resetLoginError());
+        await dispatch(login(data));
     };
     return (
         <div className="flex items-center justify-center w-full">
@@ -77,7 +76,7 @@ const Login = () => {
                         <Button
                             disabled={authStatus === "loading"}
                             type="submit"
-                            className="w-full hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-400"
+                            className="w-full hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
                         >
                             {authStatus === "loading"
                                 ? "Signing in..."

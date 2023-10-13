@@ -1,3 +1,8 @@
+import { useForm } from "react-hook-form";
+import { ISignupData } from "src/types/auth.types";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Input, Logo } from "@components/index";
+import { useAppDispatch, useAppSelector } from "@store/store";
 import {
     signup,
     getAuthStatus,
@@ -5,18 +10,13 @@ import {
     resetSignupError,
     getIsUserLoggedIn,
 } from "@store/slice/authSlice";
-import { useForm } from "react-hook-form";
-import { Button, Input, Logo } from "@components/index";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { ISignupData } from "src/types/auth.types";
 
 const Signup: React.FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const signupError = useSelector(getSignupError);
-    const authStatus = useSelector(getAuthStatus);
-    const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+    const dispatch = useAppDispatch();
+    const signupError = useAppSelector(getSignupError);
+    const authStatus = useAppSelector(getAuthStatus);
+    const isUserLoggedIn = useAppSelector(getIsUserLoggedIn);
     const { register, handleSubmit } = useForm<ISignupData>({
         defaultValues: {
             name: "",
@@ -26,12 +26,11 @@ const Signup: React.FC = () => {
     });
 
     const handleSignup = async (data: ISignupData) => {
-        console.log("signup", data);
-        // await dispatch(resetSignupError());
-        // await dispatch(signup(data));
-        // if (isUserLoggedIn) {
-        //     navigate("/");
-        // }
+        dispatch(resetSignupError());
+        await dispatch(signup(data));
+        if (isUserLoggedIn) {
+            navigate("/");
+        }
     };
 
     return (
@@ -96,7 +95,7 @@ const Signup: React.FC = () => {
                         <Button
                             disabled={authStatus === "loading"}
                             type="submit"
-                            className="w-full hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-400"
+                            className="w-full hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
                         >
                             {authStatus === "loading"
                                 ? "Signing up..."

@@ -1,8 +1,10 @@
-import { Avatar, Container, Logo } from "@components/index.ts";
+import { useAppSelector } from "@store/store";
 import { Link, NavLink } from "react-router-dom";
+import { getIsUserLoggedIn } from "@store/slice/authSlice";
+import { Avatar, Container, Logo } from "@components/index.ts";
 
 const Header: React.FC = () => {
-    const isUserLoggedIn = false;
+    const isUserLoggedIn = useAppSelector(getIsUserLoggedIn);
 
     const navItems = [
         {

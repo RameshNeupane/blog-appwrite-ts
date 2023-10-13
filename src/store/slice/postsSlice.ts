@@ -25,21 +25,27 @@ const initialState: IInitialState = {
 export const addNewPost = createAsyncThunk(
     "posts/addNewPost",
     async ({ data, userId }: IAddNewPostData) => {
-        const file = await service.uploadFile(data.image);
+        let fileId;
+        try {
+            const file = await service.uploadFile(data.image[0]);
 
-        if (file) {
-            const fileId = file.$id;
-            const { title, content, slug, status } = data;
-            const newPost = await service.createPost(slug, {
-                title,
-                content,
-                featuredImage: fileId,
-                status,
-                userId,
-            });
-            if (newPost) {
-                return newPost;
+            if (file) {
+                fileId = file.$id;
+                const { title, content, slug, status } = data;
+                const newPost = await service.createPost(slug, {
+                    title,
+                    content,
+                    featuredImage: fileId,
+                    status,
+                    userId,
+                });
+                if (newPost) {
+                    return newPost;
+                }
             }
+        } catch (error) {
+            await service.deleteFile(fileId as string);
+            throw error;
         }
     }
 );
@@ -49,7 +55,9 @@ export const updatePost = createAsyncThunk(
     "posts/updatePost",
     async ({ post, data }: IUpdatePostData) => {
         // handle file i.e. image file
-        const file = data?.image ? await service.uploadFile(data.image) : null;
+        const file = data?.image
+            ? await service.uploadFile(data.image[0])
+            : null;
 
         // delete old image after new image is uploaded successfully
         if (file) {

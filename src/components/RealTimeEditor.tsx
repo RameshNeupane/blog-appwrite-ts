@@ -1,10 +1,10 @@
-import { Control, Controller } from "react-hook-form";
 import { Editor } from "@tinymce/tinymce-react";
-import { IInputData } from "src/types/inputData.types";
+import { Control, Controller } from "react-hook-form";
+import { IPostFormData } from "src/types/posts.types";
 
 interface RealTimeEditorProps {
     name: "status" | "title" | "image" | "content" | "slug";
-    control: Control<IInputData>;
+    control: Control<IPostFormData>;
     label: string;
     defaultValue?: string;
 }

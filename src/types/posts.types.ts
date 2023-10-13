@@ -7,14 +7,14 @@ export interface IPostToDB {
     content: string;
     featuredImage: string;
     status: "inactive" | "active";
-    userId?: string;
+    userId: string;
 }
 
 export interface IPostFormData {
     title: string;
     slug: string;
     content: string;
-    image: File;
+    image: FileList;
     status: "active" | "inactive";
 }
 

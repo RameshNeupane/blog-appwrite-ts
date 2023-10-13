@@ -1,7 +1,7 @@
-import { getIsUserLoggedIn } from "@store/slice/authSlice";
-import { useAppSelector } from "@store/store";
 import React, { useEffect } from "react";
+import { useAppSelector } from "@store/store";
 import { useNavigate } from "react-router-dom";
+import { getIsUserLoggedIn } from "@store/slice/authSlice";
 
 interface AuthLayoutProps {
     children: React.ReactNode;

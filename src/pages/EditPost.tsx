@@ -9,18 +9,6 @@ const EditPost: React.FC = () => {
         getSinglePostById(state, slug as string)
     );
 
-    // useEffect(() => {
-    //     if (slug) {
-    //         service.getPost(slug).then((post) => {
-    //             if (post) {
-    //                 setPost(post);
-    //             }
-    //         });
-    //     } else {
-    //         navigate("/");
-    //     }
-    // }, [slug, navigate]);
-
     return post ? (
         <div className="py-8">
             <Container>

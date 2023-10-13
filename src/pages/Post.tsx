@@ -1,15 +1,15 @@
 import parse from "html-react-parser";
 import service from "@appwrite/service";
+import { PostFromDB } from "src/types/posts.types";
 import { getUserData } from "@store/slice/authSlice";
 import { Button, Container } from "@components/index";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { rootState, useAppDispatch, useAppSelector } from "@store/store";
 import {
     deletePost,
     getPostsStatus,
     getSinglePostById,
 } from "@store/slice/postsSlice";
-import { rootState, useAppDispatch, useAppSelector } from "@store/store";
-import { IPost } from "src/types/post.types";
 
 const Post: React.FC = () => {
     const { slug } = useParams();
@@ -17,7 +17,7 @@ const Post: React.FC = () => {
     const dispatch = useAppDispatch();
     const post = useAppSelector((state: rootState) =>
         getSinglePostById(state, slug as string)
-    ) as IPost;
+    ) as PostFromDB;
     const postsStatus = useAppSelector(getPostsStatus);
     const userData = useAppSelector(getUserData);
 
@@ -26,9 +26,11 @@ const Post: React.FC = () => {
 
     const handleDelete = async () => {
         console.log(post);
-        // await dispatch(deletePost(post));
-        // navigate("/");
+        await dispatch(deletePost(post));
+        navigate("/");
     };
+
+    console.log("post", post);
 
     return post ? (
         <div className="py-8">
@@ -43,13 +45,16 @@ const Post: React.FC = () => {
                     {isAuthor && (
                         <div className="absolute right-6 top-6">
                             <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
+                                <Button
+                                    bgColor="bg-green-600"
+                                    className="mr-3 hover:bg-green-700"
+                                >
                                     Edit
                                 </Button>
                             </Link>
                             <Button
                                 disabled={postsStatus === "loading"}
-                                bgColor="bg-red-500 hover:bg-red-600 transition-colors duration-200 ease-in disabled:bg-red-400 disabled:cursor-not-allowed"
+                                bgColor="bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed"
                                 onClick={handleDelete}
                             >
                                 Delete

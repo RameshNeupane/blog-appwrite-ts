@@ -12,8 +12,8 @@ import {
     Login,
     Post,
     Signup,
-} from "./pages";
-import { AuthLayout } from "./components";
+} from "@pages/index";
+import { AuthLayout } from "@components/index";
 
 const router = createBrowserRouter(
     createRoutesFromElements(

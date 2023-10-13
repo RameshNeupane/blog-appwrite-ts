@@ -14,7 +14,7 @@ const AllPosts: React.FC = () => {
         return (
             <div className="text-center text-xl font-medium">Loading...</div>
         );
-    } else if (!isUserLoggedIn) {
+    } else if (!isUserLoggedIn && authStatus === "failed") {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
@@ -35,7 +35,7 @@ const AllPosts: React.FC = () => {
             </div>
         );
     } else {
-        if (posts.length === 0) {
+        if (posts.length === 0 && postsStatus === "succeeded") {
             return (
                 <div className="p-2 w-full flex flex-col items-center">
                     <h1 className="text-2xl font-bold">No post to read.</h1>

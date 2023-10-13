@@ -13,7 +13,7 @@ const Logo: React.FC<LogoProps> = ({ width = "70px", className = "" }) => {
             alt="logo"
             width={width}
             className={`${className}`}
-            title="blog-appwrite"
+            title="blog-appwrite-ts"
         ></img>
     );
 };
