@@ -25,12 +25,9 @@ const Post: React.FC = () => {
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
     const handleDelete = async () => {
-        console.log(post);
         await dispatch(deletePost(post));
         navigate("/");
     };
-
-    console.log("post", post);
 
     return post ? (
         <div className="py-8">
@@ -54,10 +51,12 @@ const Post: React.FC = () => {
                             </Link>
                             <Button
                                 disabled={postsStatus === "loading"}
-                                bgColor="bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed"
+                                bgColor="bg-red-600 hover:bg-red-700 disabled:bg-red-400 "
                                 onClick={handleDelete}
                             >
-                                Delete
+                                {postsStatus === "loading"
+                                    ? "Deleting..."
+                                    : "Delete"}
                             </Button>
                         </div>
                     )}

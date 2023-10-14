@@ -28,7 +28,7 @@ const PostCard: React.FC<PostCardProps> = ({ $id, title, featuredImage }) => {
                         className="mb-2 text-2xl font-bold tracking-tight text-gray-900"
                         title={title}
                     >
-                        {title}
+                        {title.length > 30 ? `${title.slice(0, 31)}...` : title}
                     </h5>
                 </div>
             </div>

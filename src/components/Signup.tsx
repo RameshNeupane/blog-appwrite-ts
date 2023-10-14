@@ -95,11 +95,11 @@ const Signup: React.FC = () => {
                         <Button
                             disabled={authStatus === "loading"}
                             type="submit"
-                            className="w-full hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
+                            className="w-full hover:bg-blue-700 disabled:bg-blue-400"
                         >
                             {authStatus === "loading"
                                 ? "Signing up..."
-                                : "Create Account"}
+                                : "Sign up"}
                         </Button>
                     </div>
                 </form>

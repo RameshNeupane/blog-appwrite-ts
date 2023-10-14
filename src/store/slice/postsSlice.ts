@@ -55,29 +55,29 @@ export const updatePost = createAsyncThunk(
     "posts/updatePost",
     async ({ post, data }: IUpdatePostData) => {
         // handle file i.e. image file
-        const file = data?.image
-            ? await service.uploadFile(data.image[0])
-            : null;
+        const file =
+            data?.image.length > 0
+                ? await service.uploadFile(data.image[0])
+                : null;
 
         // delete old image after new image is uploaded successfully
         if (file) {
             await service.deleteFile(post?.featuredImage as string);
-
-            // now update post
-            const { title, content, slug, status } = data;
-            const { userId } = post;
-            const updatedPost = await service.updatePost(slug, {
-                title,
-                content,
-                featuredImage: file?.$id as string,
-                status,
-                userId,
-            });
-            if (updatedPost) {
-                return updatedPost;
-            } else {
-                return post;
-            }
+        }
+        // now update post
+        const { title, content, slug, status } = data;
+        const { userId } = post;
+        const updatedPost = await service.updatePost(slug, {
+            title,
+            content,
+            featuredImage: file?.$id as string,
+            status,
+            userId,
+        });
+        if (updatedPost) {
+            return updatedPost;
+        } else {
+            return post;
         }
     }
 );

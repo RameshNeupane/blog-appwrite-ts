@@ -1,11 +1,11 @@
 import service from "@appwrite/service";
 import { useForm } from "react-hook-form";
-import { PostFromDB } from "src/types/posts.types";
 import { useNavigate } from "react-router-dom";
+import { PostFromDB } from "src/types/posts.types";
 import { getUserData } from "@store/slice/authSlice";
-import React, { useCallback, useEffect, useState } from "react";
 import { IPostFormData } from "src/types/posts.types";
 import { useAppDispatch, useAppSelector } from "@store/store";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Input, RealTimeEditor, Select } from "@components/index";
 import {
     addNewPost,
@@ -35,22 +35,24 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const submitPost = async (data: IPostFormData) => {
-        console.log(data);
         setIsLoading(true);
+
+        // if there is a post then update the post else create new post
         if (post) {
             await dispatch(updatePost({ post, data }));
-            if (postsStatus === "succeeded") {
+            setIsLoading(false);
+            if (!isLoading) {
                 navigate(`/post/${data.slug}`);
             }
         } else {
             await dispatch(
                 addNewPost({ data, userId: userData?.$id as string })
             );
-            if (!isLoading) {
+            setIsLoading(false);
+            if (!isLoading && postsStatus == "succeeded") {
                 navigate(`/post/${data.slug}`);
             }
         }
-        setIsLoading(false);
     };
 
     // transform slug
@@ -83,19 +85,26 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
         };
     }, [watch, transformSlug, setValue, post]);
 
+    // button text
     let btnText = "";
     if (post) {
         btnText = "Update";
+        if (isLoading) {
+            btnText = "Updating...";
+        }
     } else {
         btnText = "Publish";
-    }
-    if (isLoading) {
-        btnText += "ing...";
+        if (isLoading) {
+            btnText += "ing...";
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit(submitPost)} className="flex flex-wrap">
-            <div className="w-2/3 px-2">
+        <form
+            onSubmit={handleSubmit(submitPost)}
+            className="flex items-start flex-col lg:flex-row gap-4 "
+        >
+            <div className="w-full lg:w-2/3">
                 <Input
                     label="Title :"
                     placeholder="Title"
@@ -121,7 +130,7 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
                     defaultValue={getValues("content")}
                 />
             </div>
-            <div className="w-1/3 px-2">
+            <div className="w-full lg:w-1/3">
                 <Input
                     label="Featured Image :"
                     type="file"
@@ -149,10 +158,13 @@ const PostForm: React.FC<PostFormProps> = ({ post }) => {
                     {...register("status", { required: true })}
                 />
                 <Button
+                    disabled={isLoading}
                     type="submit"
                     bgColor={post ? "bg-green-500" : undefined}
                     className={`w-full ${
-                        post ? "hover:bg-green-600" : "hover:bg-blue-700"
+                        post
+                            ? "hover:bg-green-600 disabled:bg-green-400"
+                            : "hover:bg-blue-700 disabled:bg-blue-400"
                     }`}
                 >
                     {btnText}
